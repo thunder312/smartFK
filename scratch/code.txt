@@ -1,0 +1,218 @@
+import React, { useState } from 'react';
+import { Menu, ChevronRight, Building2, Repeat, RefreshCw, TrendingUp } from 'lucide-react';
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('smartbanking');
+  const [selectedMain, setSelectedMain] = useState<string | null>('overview');
+  const [selectedSubSection, setSelectedSubSection] = useState<string | null>('multibanking');
+
+  const topNavItems = [
+    { id: 'girokonto', label: 'Girokonto' },
+    { id: 'kreditkarten', label: 'Kreditkarten' },
+    { id: 'tagesgeld', label: 'Tagesgeldkonten' },
+    { id: 'paypal', label: 'PayPal & Zahlungsdienste' }
+  ];
+
+  const mainSections = [
+    {
+      id: 'overview',
+      icon: TrendingUp,
+      title: 'Zentrale Kontenübersicht / Smartes Banking',
+      description: 'Alle Konten auf einen Blick'
+    }
+  ];
+
+  const subSections = [
+    {
+      id: 'multibanking',
+      icon: Building2,
+      title: 'Multi-Banking',
+      description: 'Mehrere Banken verbinden',
+      features: [
+        'Verknüpfung mehrerer Konten & Dienste',
+        'Kein manueller Import / keine Excel-Listen nötig'
+      ]
+    },
+    {
+      id: 'total',
+      icon: Repeat,
+      title: 'Gesamtüberblick',
+      description: 'Konsolidierte Ansicht',
+      features: [
+        'Aktuelle Kontostände über alle Konten',
+        'Anzeige anstehender Ausgaben',
+        'Erkennung von Gehaltseingängen'
+      ]
+    },
+    {
+      id: 'sync',
+      icon: RefreshCw,
+      title: 'Echtzeit-Synchronisation',
+      description: 'Automatische Aktualisierung',
+      features: [
+        'Erkennung regelmäßiger Buchungen',
+        'Automatische Aktualisierung der Umsätze'
+      ]
+    }
+  ];
+
+  const handleMainClick = (id: string) => {
+    if (selectedMain === id) {
+      setSelectedMain(null);
+      setSelectedSubSection(null);
+    } else {
+      setSelectedMain(id);
+      setSelectedSubSection(null);
+    }
+  };
+
+  const handleSubSectionClick = (id: string) => {
+    setSelectedSubSection(selectedSubSection === id ? null : id);
+  };
+
+  const getBreadcrumb = () => {
+    const crumbs = ['Start'];
+    
+    if (selectedMain) {
+      const main = mainSections.find(s => s.id === selectedMain);
+      if (main) crumbs.push(main.title);
+    }
+    
+    if (selectedSubSection) {
+      const sub = subSections.find(s => s.id === selectedSubSection);
+      if (sub) crumbs.push(sub.title);
+    }
+    
+    return crumbs;
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b-2 border-gray-900">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button className="p-2 border-2 border-gray-900 hover:bg-gray-100">
+              <Menu className="w-5 h-5" />
+            </button>
+            <h1 className="text-xl font-mono border-2 border-gray-900 px-4 py-1">
+              SmartBanking
+            </h1>
+          </div>
+          
+          <nav className="flex gap-2">
+            {topNavItems.map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`px-4 py-2 border-2 border-gray-900 font-mono text-sm transition-colors ${
+                  activeTab === item.id 
+                    ? 'bg-gray-900 text-white' 
+                    : 'bg-white hover:bg-gray-100'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b-2 border-gray-900 pb-2 mb-4">
+            <h2 className="font-mono">HAUPTBEREICH</h2>
+            
+            <div className="flex items-center gap-2 font-mono text-sm text-gray-600">
+              {getBreadcrumb().map((crumb, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  {index > 0 && <ChevronRight className="w-4 h-4" />}
+                  <span className={index === getBreadcrumb().length - 1 ? 'text-gray-900 font-bold' : ''}>
+                    {crumb}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {mainSections.map(section => {
+            const Icon = section.icon;
+            return (
+              <div key={section.id}>
+                <button
+                  onClick={() => handleMainClick(section.id)}
+                  className={`w-full p-5 border-2 border-gray-900 text-left transition-all ${
+                    selectedMain === section.id 
+                      ? 'bg-gray-900 text-white' 
+                      : 'bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <Icon className="w-7 h-7 flex-shrink-0 mt-1" />
+                    <div className="flex-1">
+                      <div className="font-mono text-lg mb-1">{section.title}</div>
+                      <div className="text-sm opacity-70">{section.description}</div>
+                    </div>
+                    <ChevronRight className={`w-6 h-6 flex-shrink-0 mt-1 transition-transform ${
+                      selectedMain === section.id ? 'rotate-90' : ''
+                    }`} />
+                  </div>
+                </button>
+
+                {selectedMain === section.id && (
+                  <div className="ml-8 mt-4 space-y-3">
+                    <h3 className="font-mono text-sm text-gray-600 mb-3">UNTERBEREICHE</h3>
+                    {subSections.map(subSection => {
+                      const SubIcon = subSection.icon;
+                      return (
+                        <div key={subSection.id}>
+                          <button
+                            onClick={() => handleSubSectionClick(subSection.id)}
+                            className={`w-full p-4 border-2 text-left transition-all ${
+                              selectedSubSection === subSection.id
+                                ? 'bg-purple-600 text-white border-purple-700'
+                                : 'bg-white border-gray-300 hover:border-purple-400 hover:bg-purple-50'
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <SubIcon className="w-6 h-6 flex-shrink-0 mt-1" />
+                              <div className="flex-1">
+                                <div className="font-mono mb-1">{subSection.title}</div>
+                                <div className="text-sm opacity-70">{subSection.description}</div>
+                              </div>
+                              <ChevronRight className={`w-5 h-5 flex-shrink-0 mt-1 transition-transform ${
+                                selectedSubSection === subSection.id ? 'rotate-90' : ''
+                              }`} />
+                            </div>
+                          </button>
+
+                          {selectedSubSection === subSection.id && (
+                            <div className="ml-8 mt-3 mb-2 space-y-2">
+                              <h4 className="font-mono text-xs text-gray-600 mb-2">FUNKTIONALITÄTEN</h4>
+                              {subSection.features.map((feature, index) => (
+                                <div
+                                  key={index}
+                                  className="p-3 border-2 border-purple-300 bg-purple-50"
+                                >
+                                  <div className="flex items-start gap-2">
+                                    <div className="w-6 h-6 rounded border-2 border-purple-600 bg-white flex items-center justify-center font-mono text-xs flex-shrink-0">
+                                      {index + 1}
+                                    </div>
+                                    <p className="font-mono text-sm flex-1">{feature}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </main>
+    </div>
+  );
+}
