@@ -6,7 +6,10 @@
       "Bash(timeout:*)",
       "Bash(npm run dev:*)",
       "Bash(npm run build:*)",
-      "WebFetch(domain:www.fondskonzept.ag)"
+      "WebFetch(domain:www.fondskonzept.ag)",
+      "Bash(npm install:*)",
+      "Bash(node generate-pdf.mjs:*)",
+      "Bash(dir:*)"
     ]
   }
 }
