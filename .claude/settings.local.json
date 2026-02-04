@@ -9,7 +9,9 @@
       "WebFetch(domain:www.fondskonzept.ag)",
       "Bash(npm install:*)",
       "Bash(node generate-pdf.mjs:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(npx nuxi@latest init . --force --packageManager npm)",
+      "Bash(git add:*)"
     ]
   }
 }
