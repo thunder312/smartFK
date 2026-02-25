@@ -7,8 +7,8 @@ export default defineNuxtConfig({
   ssr: false,
 
   modules: [
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss'
     // '@vite-pwa/nuxt' // Temporär deaktiviert - Kompatibilitätsproblem mit Nuxt 3.21
   ],
 
