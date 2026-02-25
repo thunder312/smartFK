@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>smartFK - Wireframes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindConfig = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'system-ui', 'sans-serif'],
+            mono: ['SF Mono', 'ui-monospace', 'Menlo', 'Monaco', 'monospace']
+          },
+          transitionTimingFunction: {
+            'ios': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            'ios-spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          }
+        }
+      }
+    }
+    tailwind.config = tailwindConfig
+  </script>
+  <style>
+    html { -webkit-tap-highlight-color: transparent; }
+    body {
+      overscroll-behavior: none;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .safe-area-top { padding-top: env(safe-area-inset-top); }
+    .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    .ios-transition { transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .touch-target { min-height: 44px; min-width: 44px; }
+    .expand-enter { opacity: 0; transform: translateY(-10px); }
+    ::-webkit-scrollbar { display: none; }
+    * { scrollbar-width: none; }
+  </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+  <div id="app" class="max-w-md mx-auto bg-gray-50 min-h-screen"></div>
+
+  <script>
+    // App Data
+    const sectionColors = {
+      smartbanking: { bg: 'bg-blue-600', light: 'bg-blue-50', border: 'border-blue-600', text: 'text-blue-600' },
+      analytics: { bg: 'bg-purple-600', light: 'bg-purple-50', border: 'border-purple-600', text: 'text-purple-600' },
+      contracts: { bg: 'bg-emerald-600', light: 'bg-emerald-50', border: 'border-emerald-600', text: 'text-emerald-600' },
+      savings: { bg: 'bg-amber-600', light: 'bg-amber-50', border: 'border-amber-600', text: 'text-amber-600' },
+      depot: { bg: 'bg-indigo-600', light: 'bg-indigo-50', border: 'border-indigo-600', text: 'text-indigo-600' }
+    };
+
+    const mainSections = [
+      {
+        id: 'smartbanking', title: 'Kontenübersicht', description: 'Smartes Banking',
+        subSections: [
+          { id: 'multibanking', title: 'Multi-Banking', description: 'Mehrere Banken verbinden',
+            features: [{ id: 'link-accounts', title: 'Verknüpfung mehrerer Konten & Dienste' }]
+          },
+          { id: 'total', title: 'Gesamtüberblick', description: 'Konsolidierte Ansicht',
+            features: [
+              { id: 'balances', title: 'Aktuelle Kontostände über alle Konten' },
+              { id: 'upcoming', title: 'Anzeige anstehender Ausgaben' },
+              { id: 'salary', title: 'Erkennung von Gehaltseingängen' }
+            ]
+          },
+          { id: 'sync', title: 'Echtzeit-Synchronisation', description: 'Automatische Aktualisierung',
+            features: [
+              { id: 'recurring', title: 'Erkennung regelmäßiger Buchungen' },
+              { id: 'auto-update', title: 'Automatische Aktualisierung der Umsätze' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'analytics', title: 'Ausgabenanalyse', description: 'Intelligente Analyse',
+        subSections: [
+          { id: 'categorization', title: 'Automatische Kategorisierung', description: 'Ausgaben einordnen',
+            features: [
+              { id: 'consumption-patterns', title: 'Erkennung von Konsummustern' },
+              { id: 'auto-categorize', title: 'Automatische Zuordnung zu Kategorien' },
+              { id: 'categories', title: 'Kategorien: Lebensmittel, Mobilität, Freizeit' }
+            ]
+          },
+          { id: 'reports', title: 'Reports & Auswertungen', description: 'Detaillierte Berichte',
+            features: [
+              { id: 'monthly-reports', title: 'Monatliche Auswertungen' },
+              { id: 'trends', title: 'Trendanalysen (steigende/fallende Ausgaben)' }
+            ]
+          },
+          { id: 'budget', title: 'Budget-Steuerung', description: 'Ausgaben kontrollieren',
+            features: [
+              { id: 'category-budgets', title: 'Individuelle Budgets pro Kategorie' },
+              { id: 'budget-adjustments', title: 'Budget-Anpassungen basierend auf Auswertungen' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'contracts', title: 'Vertragsmanagement', description: 'Verträge verwalten',
+        subSections: [
+          { id: 'contract-detection', title: 'Automatische Vertragserkennung', description: 'Verträge finden',
+            features: [
+              { id: 'detect-contracts', title: 'Erkennung laufender Verträge aus Kontoumsätzen' },
+              { id: 'contract-types', title: 'Strom, Internet, Handy, Streaming, Versicherungen' }
+            ]
+          },
+          { id: 'contract-overview', title: 'Vertragsübersicht', description: 'Alle Verträge im Blick',
+            features: [
+              { id: 'monthly-costs', title: 'Monatliche Kosten pro Vertrag' },
+              { id: 'deadlines', title: 'Kündigungsfristen & Laufzeiten' }
+            ]
+          },
+          { id: 'contract-actions', title: 'Vertragsaktionen', description: 'Verträge optimieren',
+            features: [
+              { id: 'cancel-contract', title: 'Kündigung direkt aus der App' },
+              { id: 'switch-provider', title: 'Wechsel zu günstigeren Anbietern' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'savings', title: 'Sparen & Planung', description: 'Finanzplanung',
+        subSections: [
+          { id: 'tips', title: 'Personalisierte Spartipps', description: 'Geld sparen',
+            features: [
+              { id: 'unused-subscriptions', title: 'Hinweise auf überflüssige Abos' },
+              { id: 'expensive-contracts', title: 'Hinweise auf überteuerte Verträge' }
+            ]
+          },
+          { id: 'goals', title: 'Finanzplanung & Ziele', description: 'Ziele erreichen',
+            features: [
+              { id: 'define-goals', title: 'Finanzielle Ziele definieren' },
+              { id: 'budget-alerts', title: 'Budget-Alerts bei Überschreitung' }
+            ]
+          },
+          { id: 'coach', title: 'Finanzcoach', description: 'Persönliche Beratung',
+            features: [
+              { id: 'improve-behavior', title: 'Unterstützung beim besseren Finanzverhalten' },
+              { id: 'understand-finance', title: 'Finanzen verstehen ohne Experte zu sein' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'depot', title: 'Depot', description: 'Wertpapiere & Investments',
+        subSections: [
+          { id: 'custodians', title: 'Lagerstellen', description: 'Verwahrung Ihrer Wertpapiere',
+            features: [
+              { id: 'custodian-overview', title: 'Übersicht Ihrer Lagerstellen' },
+              { id: 'custodian-contact', title: 'Kontakt zur Lagerstelle' }
+            ]
+          },
+          { id: 'depots', title: 'Depots', description: 'Ihre Wertpapierdepots',
+            features: [
+              { id: 'depot-overview', title: 'Depotübersicht & Performance' },
+              { id: 'depot-buy', title: 'Wertpapiere kaufen' },
+              { id: 'depot-sell', title: 'Wertpapiere verkaufen' },
+              { id: 'depot-savings-plan', title: 'Sparplan anlegen' }
+            ]
+          },
+          { id: 'portfolios', title: 'Portfolios', description: 'Portfolio-Management',
+            features: [
+              { id: 'portfolio-overview', title: 'Portfolio-Übersicht' },
+              { id: 'portfolio-buy', title: 'Wertpapiere kaufen' },
+              { id: 'portfolio-sell', title: 'Wertpapiere verkaufen' },
+              { id: 'portfolio-savings-plan', title: 'Sparplan anlegen' }
+            ]
+          },
+          { id: 'broker-contact', title: 'Kontakt zum Makler', description: 'Persönliche Beratung',
+            features: [
+              { id: 'broker-info', title: 'Ihr Makler' },
+              { id: 'broker-message', title: 'Nachricht senden' },
+              { id: 'broker-appointment', title: 'Termin vereinbaren' }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const featurePages = {
+      'link-accounts': { title: 'Konten verknüpfen', description: 'Verbinden Sie Ihre Bankkonten', sectionId: 'smartbanking' },
+      'balances': { title: 'Kontostände', description: 'Alle Kontostände im Überblick', sectionId: 'smartbanking' },
+      'upcoming': { title: 'Anstehende Ausgaben', description: 'Geplante Abbuchungen', sectionId: 'smartbanking' },
+      'salary': { title: 'Gehaltseingänge', description: 'Erkannte Gehaltszahlungen', sectionId: 'smartbanking' },
+      'recurring': { title: 'Regelmäßige Buchungen', description: 'Wiederkehrende Transaktionen', sectionId: 'smartbanking' },
+      'auto-update': { title: 'Auto-Aktualisierung', description: 'Echtzeit-Synchronisation', sectionId: 'smartbanking' },
+      'consumption-patterns': { title: 'Konsummuster', description: 'Ihre Ausgabegewohnheiten', sectionId: 'analytics' },
+      'auto-categorize': { title: 'Auto-Kategorisierung', description: 'Automatische Zuordnung', sectionId: 'analytics' },
+      'categories': { title: 'Kategorien', description: 'Ausgabenkategorien verwalten', sectionId: 'analytics' },
+      'monthly-reports': { title: 'Monatsberichte', description: 'Monatliche Übersichten', sectionId: 'analytics' },
+      'trends': { title: 'Trendanalysen', description: 'Ausgabentrends erkennen', sectionId: 'analytics' },
+      'category-budgets': { title: 'Kategorie-Budgets', description: 'Budgets pro Kategorie', sectionId: 'analytics' },
+      'budget-adjustments': { title: 'Budget-Anpassungen', description: 'Smarte Budgetoptimierung', sectionId: 'analytics' },
+      'detect-contracts': { title: 'Vertragserkennung', description: 'Verträge automatisch finden', sectionId: 'contracts' },
+      'contract-types': { title: 'Vertragsarten', description: 'Kategorisierte Verträge', sectionId: 'contracts' },
+      'monthly-costs': { title: 'Monatliche Kosten', description: 'Kosten pro Vertrag', sectionId: 'contracts' },
+      'deadlines': { title: 'Fristen & Laufzeiten', description: 'Kündigungsfristen im Blick', sectionId: 'contracts' },
+      'cancel-contract': { title: 'Vertrag kündigen', description: 'Einfache Kündigung', sectionId: 'contracts' },
+      'switch-provider': { title: 'Anbieter wechseln', description: 'Bessere Alternativen finden', sectionId: 'contracts' },
+      'unused-subscriptions': { title: 'Überflüssige Abos', description: 'Ungenutzte Abonnements', sectionId: 'savings' },
+      'expensive-contracts': { title: 'Teure Verträge', description: 'Einsparpotential erkennen', sectionId: 'savings' },
+      'define-goals': { title: 'Sparziele', description: 'Ihre finanziellen Ziele', sectionId: 'savings' },
+      'budget-alerts': { title: 'Budget-Alerts', description: 'Warnungen bei Überschreitung', sectionId: 'savings' },
+      'improve-behavior': { title: 'Finanzverhalten', description: 'Bessere Gewohnheiten', sectionId: 'savings' },
+      'understand-finance': { title: 'Finanzen verstehen', description: 'Einfach erklärt', sectionId: 'savings' },
+      'custodian-overview': { title: 'Lagerstellen', description: 'Ihre Verwahrstellen', sectionId: 'depot' },
+      'custodian-contact': { title: 'Lagerstellen-Kontakt', description: 'Kontaktmöglichkeiten', sectionId: 'depot' },
+      'depot-overview': { title: 'Depotübersicht', description: 'Ihre Wertpapiere', sectionId: 'depot' },
+      'depot-buy': { title: 'Wertpapiere kaufen', description: 'Order aufgeben', sectionId: 'depot' },
+      'depot-sell': { title: 'Wertpapiere verkaufen', description: 'Verkaufsorder', sectionId: 'depot' },
+      'depot-savings-plan': { title: 'Sparplan anlegen', description: 'Regelmäßig investieren', sectionId: 'depot' },
+      'portfolio-overview': { title: 'Portfolio-Übersicht', description: 'Gesamtportfolio', sectionId: 'depot' },
+      'portfolio-buy': { title: 'Portfolio kaufen', description: 'In Portfolio investieren', sectionId: 'depot' },
+      'portfolio-sell': { title: 'Portfolio verkaufen', description: 'Anteile verkaufen', sectionId: 'depot' },
+      'portfolio-savings-plan': { title: 'Portfolio-Sparplan', description: 'Automatisch investieren', sectionId: 'depot' },
+      'broker-info': { title: 'Ihr Makler', description: 'Maklerinformationen', sectionId: 'depot' },
+      'broker-message': { title: 'Nachricht senden', description: 'Kontakt aufnehmen', sectionId: 'depot' },
+      'broker-appointment': { title: 'Termin vereinbaren', description: 'Beratungstermin buchen', sectionId: 'depot' }
+    };
+
+    // State
+    let currentView = 'home';
+    let currentSection = null;
+    let currentFeature = null;
+    let selectedSubSection = null;
+
+    // Icons (SVG)
+    const icons = {
+      menu: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
+      back: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+      chevron: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>',
+      chevronSm: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>',
+      plus: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+      trendUp: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>',
+      trendDown: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 18l-9.5-9.5-5 5L1 6"/><path d="M17 18h6v-6"/></svg>',
+      euro: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M14.5 9a3.5 3.5 0 00-5 0M9.5 15a3.5 3.5 0 005 0M7 12h8M7 10h6"/></svg>',
+      calendar: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+      target: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+      search: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>'
+    };
+
+    function toRoman(num) {
+      return ['I', 'II', 'III', 'IV', 'V'][num - 1] || num;
+    }
+
+    function toLetter(num) {
+      return String.fromCharCode(96 + num);
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      if (currentView === 'home') {
+        app.innerHTML = renderHome();
+      } else if (currentView === 'section') {
+        app.innerHTML = renderSection();
+      } else if (currentView === 'feature') {
+        app.innerHTML = renderFeature();
+      }
+    }
+
+    function renderHeader(title, subtitle, showBack = false, bgClass = 'bg-gray-900') {
+      return `
+        <header class="sticky top-0 z-40 safe-area-top ${bgClass}">
+          <div class="px-4 py-4 flex items-center gap-3 text-white">
+            <button onclick="${showBack ? 'goBack()' : ''}" class="p-2 border-2 border-white/30 active:bg-white/20 touch-target flex items-center justify-center rounded ios-transition">
+              ${showBack ? icons.back : icons.menu}
+            </button>
+            <div class="flex-1 min-w-0">
+              <h1 class="text-lg font-mono font-bold truncate">${title}</h1>
+              ${subtitle ? `<p class="text-xs opacity-70 truncate">${subtitle}</p>` : ''}
+            </div>
+          </div>
+        </header>
+      `;
+    }
+
+    function renderHome() {
+      const sectionsHtml = mainSections.map((section, index) => {
+        const colors = sectionColors[section.id];
+        const roman = toRoman(index + 1);
+        return `
+          <button onclick="navigateToSection('${section.id}')"
+            class="w-full p-4 rounded-xl text-left ios-transition active:scale-[0.98] ${colors.light} border-2 ${colors.border}">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg flex items-center justify-center ${colors.bg}">
+                <span class="text-white font-mono font-bold text-lg">${roman}</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-mono text-base font-bold ${colors.text}">
+                  <span class="opacity-60 mr-2">${roman}</span>${section.title}
+                </div>
+                <div class="text-sm text-gray-600">${section.description}</div>
+                <div class="text-xs text-gray-400 mt-1">${section.subSections.length} Unterbereiche</div>
+              </div>
+              <div class="${colors.text}">${icons.chevron}</div>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      return `
+        ${renderHeader('smartFK', 'Ihre Finanzen im Überblick')}
+        <main class="px-4 py-6 pb-8 safe-area-bottom">
+          <h2 class="font-mono text-sm text-gray-600 mb-4">KERNFUNKTIONEN</h2>
+          <div class="space-y-3">${sectionsHtml}</div>
+        </main>
+      `;
+    }
+
+    function renderSection() {
+      const section = mainSections.find(s => s.id === currentSection);
+      const colors = sectionColors[section.id];
+      const sectionIndex = mainSections.indexOf(section) + 1;
+      const roman = toRoman(sectionIndex);
+
+      const subSectionsHtml = section.subSections.map((sub, subIndex) => {
+        const isOpen = selectedSubSection === sub.id;
+        const featuresHtml = sub.features.map((feature, fIndex) => `
+          <button onclick="navigateToFeature('${feature.id}')"
+            class="w-full p-3 border-2 ${colors.border} ${colors.light} active:opacity-80 ios-transition text-left rounded-lg min-h-[48px]">
+            <div class="flex items-center gap-2">
+              <div class="min-w-[40px] h-6 px-1 rounded border-2 ${colors.border} bg-white flex items-center justify-center font-mono text-xs flex-shrink-0 ${colors.text}">
+                ${roman}.${subIndex + 1}.${toLetter(fIndex + 1)}
+              </div>
+              <p class="font-mono text-xs flex-1 text-gray-800">${feature.title}</p>
+              <div class="${colors.text}">${icons.chevronSm}</div>
+            </div>
+          </button>
+        `).join('');
+
+        return `
+          <div class="subsection">
+            <button onclick="toggleSubSection('${sub.id}')"
+              class="w-full p-3 border-2 text-left ios-transition rounded-lg min-h-[56px] ${isOpen ? colors.bg + ' text-white ' + colors.border : 'bg-white border-gray-300'}">
+              <div class="flex items-start gap-2">
+                <div class="w-8 h-8 rounded flex items-center justify-center font-mono text-xs font-bold flex-shrink-0 ${isOpen ? 'bg-white/20 text-white' : colors.light + ' ' + colors.text}">
+                  ${roman}.${subIndex + 1}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-mono text-sm">${sub.title}</div>
+                  <div class="text-xs opacity-70">${sub.description}</div>
+                </div>
+                <div class="ios-transition ${isOpen ? 'rotate-90' : ''}">${icons.chevronSm}</div>
+              </div>
+            </button>
+            ${isOpen ? `
+              <div class="ml-4 mt-2 mb-2 space-y-2">
+                <h4 class="font-mono text-xs ${colors.text} mb-2">FUNKTIONEN (${roman}.${subIndex + 1})</h4>
+                ${featuresHtml}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        ${renderHeader(section.title, section.description, true, colors.bg)}
+        <main class="px-4 py-4 pb-8 safe-area-bottom">
+          <div class="space-y-3">
+            <div class="border-b-2 ${colors.border} pb-2 mb-3">
+              <h2 class="font-mono text-sm ${colors.text}">UNTERBEREICHE (${roman})</h2>
+            </div>
+            ${subSectionsHtml}
+          </div>
+        </main>
+      `;
+    }
+
+    function renderFeature() {
+      const feature = featurePages[currentFeature];
+      const colors = sectionColors[feature.sectionId];
+      return `
+        ${renderHeader(feature.title, feature.description, true, colors.bg)}
+        <main class="px-4 py-4 pb-8 safe-area-bottom">
+          ${getFeatureContent(currentFeature, colors)}
+        </main>
+      `;
+    }
+
+    function getFeatureContent(featureId, colors) {
+      const contents = {
+        'link-accounts': `
+          <div class="space-y-3">
+            ${['Sparkasse|verbunden|true', 'DKB|verbunden|true', 'ING|nicht verbunden|false', 'Commerzbank|nicht verbunden|false'].map(b => {
+              const [name, status, connected] = b.split('|');
+              return `<div class="p-3 border-2 border-gray-300 bg-white rounded-lg">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-sm">${name}</span>
+                  <span class="text-xs px-2 py-1 rounded ${connected === 'true' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">${status}</span>
+                </div>
+              </div>`;
+            }).join('')}
+            <button class="w-full p-4 border-2 border-dashed border-blue-400 text-blue-600 flex items-center justify-center gap-2 rounded-lg">
+              ${icons.plus}<span class="font-mono text-sm">Neue Bank hinzufügen</span>
+            </button>
+          </div>`,
+        'balances': `
+          <div class="space-y-3">
+            <div class="p-4 border-2 border-gray-900 bg-gray-900 text-white rounded-lg">
+              <div class="text-xs font-mono opacity-70">Gesamtvermögen</div>
+              <div class="text-2xl font-mono mt-1">12.847,53 €</div>
+            </div>
+            ${['Sparkasse Girokonto|3.241,87 €', 'DKB Girokonto|1.892,16 €', 'Sparkasse Tagesgeld|5.000,00 €', 'DKB Depot|2.713,50 €'].map(a => {
+              const [name, balance] = a.split('|');
+              return `<div class="p-3 border-2 border-gray-300 bg-white rounded-lg flex items-center justify-between">
+                <div class="flex items-center gap-2">${icons.euro}<span class="font-mono text-xs">${name}</span></div>
+                <span class="font-mono text-sm font-bold">${balance}</span>
+              </div>`;
+            }).join('')}
+          </div>`,
+        'upcoming': `
+          <div class="space-y-3">
+            <div class="p-3 border-2 border-orange-300 bg-orange-50 rounded-lg">
+              <div class="flex items-center gap-2 text-orange-700">
+                ${icons.calendar}<span class="font-mono text-sm font-bold">Diese Woche: 487,50 €</span>
+              </div>
+            </div>
+            ${['Miete|-850,00 €|01.03.2026|fällig', 'Stromabschlag|-75,00 €|03.03.2026|bald', 'Netflix|-12,99 €|05.03.2026|bald'].map(e => {
+              const [name, amount, date, status] = e.split('|');
+              return `<div class="p-3 border-2 border-gray-300 bg-white rounded-lg flex items-center justify-between">
+                <div><div class="font-mono text-sm">${name}</div><div class="text-xs text-gray-500">${date}</div></div>
+                <div class="text-right"><div class="font-mono text-sm font-bold text-red-600">${amount}</div>
+                <div class="text-xs ${status === 'fällig' ? 'text-orange-600' : 'text-gray-400'}">${status}</div></div>
+              </div>`;
+            }).join('')}
+          </div>`,
+        'consumption-patterns': `
+          <div class="space-y-3">
+            ${['Lebensmittel|342,50 €|up|+12%', 'Restaurant|156,80 €|down|-8%', 'Shopping|89,00 €|up|+5%', 'Transport|67,50 €|down|-15%'].map(p => {
+              const [cat, amount, trend, change] = p.split('|');
+              return `<div class="p-3 border-2 border-gray-300 bg-white rounded-lg">
+                <div class="flex items-center justify-between">
+                  <div><div class="font-mono text-sm font-bold">${cat}</div><div class="text-xs text-gray-500">Diesen Monat</div></div>
+                  <div class="text-right flex items-center gap-2">
+                    <span class="font-mono text-sm">${amount}</span>
+                    <div class="flex items-center text-xs ${trend === 'up' ? 'text-red-500' : 'text-green-500'}">
+                      ${trend === 'up' ? icons.trendUp : icons.trendDown}<span>${change}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`,
+        'detect-contracts': `
+          <div class="space-y-3">
+            <div class="p-3 border-2 border-emerald-300 bg-emerald-50 rounded-lg flex items-center gap-3">
+              ${icons.search}
+              <div><div class="font-mono text-sm font-bold text-emerald-800">4 Verträge erkannt</div>
+              <div class="text-xs text-emerald-600">Zuletzt gescannt: Heute</div></div>
+            </div>
+            ${['Netflix|15.01.2026|12,99 €/Monat|neu', 'Spotify|10.01.2026|9,99 €/Monat|bestätigt', 'Vodafone|05.01.2026|39,99 €/Monat|bestätigt'].map(c => {
+              const [name, detected, amount, status] = c.split('|');
+              return `<div class="p-3 border-2 border-gray-300 bg-white rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-mono text-sm font-bold">${name}</span>
+                  <span class="text-xs px-2 py-1 rounded ${status === 'neu' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}">${status === 'neu' ? 'Neu erkannt' : 'Bestätigt'}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-gray-500">Erkannt am ${detected}</span>
+                  <span class="font-mono text-sm">${amount}</span>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`,
+        'define-goals': `
+          <div class="space-y-3">
+            ${[{name:'Urlaub 2026',target:2000,saved:1250,deadline:'Juni 2026'},{name:'Notgroschen',target:5000,saved:3800,deadline:'Dez 2026'},{name:'Neues Laptop',target:1500,saved:450,deadline:'Sep 2026'}].map(g => `
+              <div class="p-4 border-2 border-gray-300 bg-white rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">${icons.target}<span class="font-mono text-sm font-bold">${g.name}</span></div>
+                  <span class="text-xs text-gray-500">Bis ${g.deadline}</span>
+                </div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
+                  <div class="h-full bg-amber-500 rounded-full" style="width:${(g.saved/g.target)*100}%"></div>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="font-mono text-amber-700">${g.saved.toLocaleString('de-DE')} €</span>
+                  <span class="text-gray-500">von ${g.target.toLocaleString('de-DE')} €</span>
+                </div>
+              </div>
+            `).join('')}
+            <button class="w-full p-3 border-2 border-dashed border-amber-400 text-amber-600 flex items-center justify-center gap-2 rounded-lg">
+              ${icons.plus}<span class="font-mono text-sm">Neues Sparziel</span>
+            </button>
+          </div>`,
+        'depot-overview': `
+          <div class="space-y-3">
+            <div class="p-4 border-2 border-indigo-600 bg-indigo-50 rounded-lg">
+              <div class="text-xs font-mono text-indigo-700">Depotwert</div>
+              <div class="text-2xl font-mono mt-1 text-indigo-800">45.230,00 €</div>
+              <div class="flex items-center gap-2 mt-2">
+                ${icons.trendUp}<span class="font-mono text-sm text-green-600">+3.450,00 € (+8,26%)</span>
+              </div>
+            </div>
+            ${['MSCI World ETF|18.500,00 €|+12,5%|true','DAX ETF|8.200,00 €|+5,2%|true','Apple Inc.|6.800,00 €|+18,3%|true','Anleihen ETF|5.500,00 €|-1,2%|false','Gold ETC|6.230,00 €|+3,8%|true'].map(p => {
+              const [name,value,change,pos] = p.split('|');
+              return `<div class="p-3 border-2 border-gray-300 bg-white rounded-lg">
+                <div class="flex items-center justify-between">
+                  <div><div class="font-mono text-sm font-bold">${name}</div><div class="font-mono text-sm text-gray-600">${value}</div></div>
+                  <div class="flex items-center gap-1 ${pos === 'true' ? 'text-green-600' : 'text-red-600'}">
+                    ${pos === 'true' ? icons.trendUp : icons.trendDown}<span class="font-mono text-sm">${change}</span>
+                  </div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`
+      };
+
+      return contents[featureId] || `
+        <div class="p-4 border-2 ${colors.border} ${colors.light} rounded-lg text-center">
+          <p class="font-mono text-sm ${colors.text}">Wireframe: ${featurePages[featureId]?.title || featureId}</p>
+          <p class="text-xs text-gray-500 mt-2">Feature-Inhalt Platzhalter</p>
+        </div>
+      `;
+    }
+
+    // Navigation
+    function navigateToSection(sectionId) {
+      currentView = 'section';
+      currentSection = sectionId;
+      selectedSubSection = null;
+      render();
+    }
+
+    function navigateToFeature(featureId) {
+      currentView = 'feature';
+      currentFeature = featureId;
+      render();
+    }
+
+    function toggleSubSection(subId) {
+      selectedSubSection = selectedSubSection === subId ? null : subId;
+      render();
+    }
+
+    function goBack() {
+      if (currentView === 'feature') {
+        currentView = 'section';
+        currentFeature = null;
+      } else if (currentView === 'section') {
+        currentView = 'home';
+        currentSection = null;
+        selectedSubSection = null;
+      }
+      render();
+    }
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>

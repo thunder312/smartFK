@@ -11,7 +11,9 @@
       "Bash(node generate-pdf.mjs:*)",
       "Bash(dir:*)",
       "Bash(npx nuxi@latest init . --force --packageManager npm)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Migrate from React to Nuxt 3 with iOS 26 optimization\n\nComplete rewrite of the smartFK financial management app:\n\nFRAMEWORK MIGRATION:\n- React 18 + Vite → Nuxt 3 + Vue 3 Composition API\n- Monolithic App.tsx \\(1859 lines\\) → 55+ modular Vue components\n- React hooks → Pinia stores for state management\n- State-based navigation → File-based routing \\(pages/\\)\n\nAPPLE HUMAN INTERFACE GUIDELINES:\n- SF Pro system fonts via Tailwind config\n- Touch targets minimum 44x44pt \\(.touch-target class\\)\n- Safe area insets for notch/home indicator\n- iOS-style animations \\(cubic-bezier timing\\)\n- Haptic feedback composable \\(useHaptics\\)\n- Dark mode preparation \\(prefers-color-scheme\\)\n\nPROJECT STRUCTURE:\n- components/layout/ - MobileHeader, MobileMenu\n- components/features/ - 38 feature components \\(smartbanking, analytics, contracts, savings, depot\\)\n- stores/ - navigation.ts, sections.ts \\(Pinia\\)\n- pages/ - index, [section]/index, [section]/[feature]\n- composables/ - useHaptics.ts\n- types/ - TypeScript interfaces\n\nCONFIGURATION:\n- Tailwind safelist for dynamic color classes\n- iOS PWA meta tags \\(apple-mobile-web-app-capable\\)\n- SPA mode \\(ssr: false\\)\n- PWA module temporarily disabled \\(Nuxt 3.21 compatibility\\)\n\nREMOVED:\n- React dependencies and source files\n- Old screenshots and PDF documentation\n- Vite standalone config files\n\nSee MIGRATION.md for detailed documentation.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)"
     ]
   }
 }
